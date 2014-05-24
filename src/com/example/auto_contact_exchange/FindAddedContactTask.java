@@ -3,8 +3,9 @@ package com.example.auto_contact_exchange;
 import java.util.ArrayList;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
-public class FindAddedContactTask extends AsyncTask<ContactListPair, Void, String>
+public class FindAddedContactTask extends AsyncTask<ContactListPair, Void, Long>
 {
 	private OnAddedContactFound callback;
 	
@@ -14,24 +15,25 @@ public class FindAddedContactTask extends AsyncTask<ContactListPair, Void, Strin
 	}
 	
 	@Override
-	protected String doInBackground(ContactListPair... params)
+	protected Long doInBackground(ContactListPair... params)
 	{
 		int count = params.length;
 		if (count == 0)
-			return "";
+			return -1l;
 		
-		ArrayList<String> oldContacts = params[0].getOldContacts();
-		ArrayList<String> newContacts = params[0].getNewContacts();
+		ArrayList<Long> oldContacts = params[0].getOldContacts();
+		ArrayList<Long> newContacts = params[0].getNewContacts();
 		
 		newContacts.removeAll(oldContacts);
+		Log.d("length", "" + newContacts.size());
 		if(newContacts.isEmpty())
-			return "";
+			return -1l;
 		
-		String id = newContacts.get(0);
+		long id = newContacts.get(0);
 		return id;
 	}
 	
-	protected void onPostExecute(String result)
+	protected void onPostExecute(Long result)
 	{
 		callback.onAddedContactFound(result);
 	}

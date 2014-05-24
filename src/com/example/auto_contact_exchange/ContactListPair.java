@@ -4,21 +4,21 @@ import java.util.ArrayList;
 
 public class ContactListPair
 {
-	private ArrayList<String> oldContacts;
-	private ArrayList<String> newContacts;
+	private ArrayList<Long> oldContacts;
+	private ArrayList<Long> newContacts;
 	
-	public ContactListPair(ArrayList<String> old, ArrayList<String> n)
+	public ContactListPair(ArrayList<Long> oldContacts2, ArrayList<Long> arrayList)
 	{
-		oldContacts = old;
-		newContacts = n;
+		oldContacts = oldContacts2;
+		newContacts = arrayList;
 	}
 	
-	public ArrayList<String> getOldContacts()
+	public ArrayList<Long> getOldContacts()
 	{
 		return oldContacts;
 	}
 	
-	public ArrayList<String> getNewContacts()
+	public ArrayList<Long> getNewContacts()
 	{
 		return newContacts;
 	}
