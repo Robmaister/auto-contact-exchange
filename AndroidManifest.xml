@@ -3,6 +3,8 @@
     package="com.example.auto_contact_exchange"
     android:versionCode="1"
     android:versionName="1.0" >
+    
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
 
     <uses-sdk
         android:minSdkVersion="8"

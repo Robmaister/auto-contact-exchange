@@ -4,5 +4,15 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
     
-
+	<Button
+        android:id="@+id/next"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="59dp"
+        android:gravity="center_horizontal"
+        android:text="@string/next" 
+        android:onClick="nextFrame"/>
+	
 </LinearLayout>
