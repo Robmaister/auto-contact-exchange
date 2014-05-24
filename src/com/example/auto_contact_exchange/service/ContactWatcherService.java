@@ -20,7 +20,7 @@ import android.widget.Toast;
 public class ContactWatcherService extends Service implements OnContactChanged, OnAddedContactFound {
 
 	ContactObserver observer;
-	ArrayList<String> oldContacts;
+	ArrayList<Long> oldContacts;
 	
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -50,19 +50,18 @@ public class ContactWatcherService extends Service implements OnContactChanged, 
 	}
 	
 	@Override
-	public void onAddedContactFound(String contact) {
+	public void onAddedContactFound(Long contact) {
 		// TODO Auto-generated method stub
 		
 	}
 	
-	public ArrayList<String> getContacts() {
-		ArrayList<String> contacts = new ArrayList<String>();
+	public ArrayList<Long> getContacts() {
+		ArrayList<Long> contacts = new ArrayList<Long>();
 		ContentResolver cr = getContentResolver();
 		Cursor cur = cr.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null);
 		if(cur.getCount() > 0) {
 			while(cur.moveToNext()) {
-				String id = cur.getString(cur.getColumnIndex(ContactsContract.Contacts._ID)); 
-				contacts.add(id);
+				contacts.add(cur.getLong(cur.getColumnIndex(ContactsContract.Contacts._ID)));
 			}
 		}
 
