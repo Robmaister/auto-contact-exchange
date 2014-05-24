@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.CommonDataKinds;
+import android.telephony.SmsManager;
 import android.test.mock.MockContentResolver;
 import android.util.Log;
 import android.view.Menu;
@@ -56,7 +57,10 @@ public class AddContact extends Activity implements OnAddedContactFound {
 	@Override
 	public void onAddedContactFound(Long contact) {
 		Toast.makeText(this, ""+contact, Toast.LENGTH_LONG).show();
-		//TODO find all the rest of the contact info
+		
+		/****************************
+		 * Find Rest of Contact Info*
+		 ****************************/
 		Cursor result = getContentResolver().query(ContactsContract.Contacts.CONTENT_URI, null, 
 				ContactsContract.Contacts._ID +" = ?", 
 				new String[]{""+contact}, null);      
@@ -69,9 +73,13 @@ public class AddContact extends Activity implements OnAddedContactFound {
 		}
 
 		String phoneNumber = getPhoneNumber(contact);
+		
+		/****************
+		 * To Send texts*
+		 ***************/
+		/*SmsManager manager = SmsManager.getDefault();
+		manager.sendTextMessage(phoneNumber, null, "What's Up?", null, null);*/
 	}
-
-	//TODO send text
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data)
