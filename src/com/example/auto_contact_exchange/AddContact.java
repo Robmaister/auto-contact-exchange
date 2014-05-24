@@ -12,22 +12,25 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
-public class AddContact extends Activity{
+public class AddContact extends Activity implements OnAddedContactFound {
+
+	private static final int CONTACT_ADDED = 100;
+	
+	private ArrayList<String> oldContacts;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.add_contact_screen);
 
-		final ArrayList<String> oldContacts = getContacts();
+		oldContacts = getContacts();
 
 		Button next = (Button) findViewById(R.id.next);
 		next.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				Intent callContactAdd = new Intent(Intent.ACTION_INSERT, ContactsContract.Contacts.CONTENT_URI); 
-				startActivity(callContactAdd);
-				String changedNum = getChangedNumber(oldContacts, getContacts());
-				Log.d("id", changedNum);
+				startActivityForResult(callContactAdd, CONTACT_ADDED);
 			}
 		});
 	}
@@ -42,26 +45,23 @@ public class AddContact extends Activity{
 				contacts.add(id);
 			}
 		}
-		
+
 		return contacts;
 	}
 
-	public String getChangedNumber(ArrayList<String> oldContacts, ArrayList<String> newContacts) {
-		newContacts.removeAll(oldContacts);
-		if(newContacts.isEmpty())
-			return "";
-		
-		String id = newContacts.get(0);
-		
-		String number = "";
-		
-		
-		return id;
+	@Override
+	public void onAddedContactFound(String contact) {
+		Toast.makeText(this, contact, Toast.LENGTH_LONG).show();
 	}
-	
-	
-	
-	
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data)
+	{
+		ContactListPair clp = new ContactListPair(oldContacts, getContacts());
+		FindAddedContactTask task = new FindAddedContactTask(AddContact.this);
+		task.execute(clp);
+	}
+
 	/*public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
