@@ -4,16 +4,20 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.CommonDataKinds;
+import android.test.mock.MockContentResolver;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+import android.provider.ContactsContract.CommonDataKinds.Phone;
 
 public class AddContact extends Activity implements OnAddedContactFound {
 
@@ -53,21 +57,18 @@ public class AddContact extends Activity implements OnAddedContactFound {
 	public void onAddedContactFound(Long contact) {
 		Toast.makeText(this, ""+contact, Toast.LENGTH_LONG).show();
 		//TODO find all the rest of the contact info
+		Cursor result = getContentResolver().query(ContactsContract.Contacts.CONTENT_URI, null, 
+				ContactsContract.Contacts._ID +" = ?", 
+				new String[]{""+contact}, null);      
+		if (result.moveToFirst()) {
 
-		/*ArrayList<String> phones = new ArrayList<String>();
+			for(int i=0; i< result.getColumnCount(); i++){
+				Log.i("CONTACTSTAG", result.getColumnName(i) + ": "
+						+ result.getString(i));
+			}         
+		}
 
-		Cursor cursor = mContentResolver.query(
-				CommonDataKinds.Phone.CONTENT_URI, 
-				null, 
-				CommonDataKinds.Phone.CONTACT_ID +" = ?", 
-				new String[]{id}, null);
-
-		while (cursor.moveToNext()) 
-		{
-			phones.add(cursor.getString(cursor.getColumnIndex(CommonDataKinds.Phone.NUMBER)));
-		} 
-
-		cursor.close();*/
+		String phoneNumber = getPhoneNumber(contact);
 	}
 
 	//TODO send text
@@ -79,4 +80,25 @@ public class AddContact extends Activity implements OnAddedContactFound {
 		FindAddedContactTask task = new FindAddedContactTask(AddContact.this);
 		task.execute(clp);
 	}
+
+	public String getPhoneNumber(long id) {
+		ArrayList<String> phones = new ArrayList<String>();
+		ContentResolver m = getContentResolver();
+		Cursor cursor = m.query(
+				CommonDataKinds.Phone.CONTENT_URI, 
+				null, 
+				CommonDataKinds.Phone.CONTACT_ID +" = ?", 
+				new String[]{""+id}, null);
+
+		while (cursor.moveToNext()) 
+		{
+			phones.add(cursor.getString(cursor.getColumnIndex(CommonDataKinds.Phone.NUMBER)));
+		} 
+
+		cursor.close();
+		
+		return phones.get(0);
+	}
+
+
 }
