@@ -22,6 +22,18 @@
         android:orientation="vertical" >
     </LinearLayout>
 
+     <Button
+        android:id="@+id/loginButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:layout_marginTop="100dp"
+        android:text="@string/login"
+        android:textColor="#fff"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/button_login"
+        />
+    
     <Button
         android:id="@+id/button1"
         android:layout_width="match_parent"

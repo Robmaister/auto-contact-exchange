@@ -70,16 +70,24 @@ public class ContactWatcherService extends Service implements OnContactChanged, 
 		Cursor result = getContentResolver().query(ContactsContract.Contacts.CONTENT_URI, null, 
 				ContactsContract.Contacts._ID +" = ?", 
 				new String[]{""+contact}, null);      
-		if (result.moveToFirst()) {
+		/*if (result.moveToFirst()) {
 
 			for(int i=0; i< result.getColumnCount(); i++){
 				Log.i("CONTACTSTAG", result.getColumnName(i) + ": "
 						+ result.getString(i));
 			}        
-		}
+		}*/
 
+		
+		/*************
+		 * Get Number*
+		 *************/
+		
 		String phoneNumber = getPhoneNumber(contact);
 		
+		/*****************
+		 * Create Message*
+		 *****************/
 		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 		String prefMesg = sharedPref.getString("pref_mesg_str", "");
 		if (prefMesg.equals(""))
@@ -93,8 +101,19 @@ public class ContactWatcherService extends Service implements OnContactChanged, 
 		
 		prefMesg = prefMesg.replaceAll("\\Q{myname}\\E", myName);
 		
+		/***********
+		 * Send SMS*
+		 ***********/
 		SmsManager manager = SmsManager.getDefault();
 		manager.sendTextMessage(phoneNumber, null, prefMesg, null, null);
+		
+		/***********
+		 * Send MMS*
+		 ***********/
+		
+		/***************************
+		 * Send SMS with WebService*
+		 ***************************/
 	}
 	
 	public ArrayList<Long> getContacts() {

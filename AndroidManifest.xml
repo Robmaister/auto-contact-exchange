@@ -9,6 +9,8 @@
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.INTERNET" />
+	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     
     <uses-sdk
         android:minSdkVersion="8"
@@ -28,7 +30,7 @@
 	        
 	    </service>
         <activity
-            android:name="com.example.auto_contact_exchange.MainActivity"
+            android:name="com.example.auto_contact_exchange.LoginActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -36,6 +38,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        
+        <activity android:name=".MainActivity">
+           </activity>
          <activity android:name=".AddContact" >
              
          </activity>
