@@ -6,13 +6,18 @@ import com.example.auto_contact_exchange.AddContact;
 import com.example.auto_contact_exchange.ContactListPair;
 import com.example.auto_contact_exchange.FindAddedContactTask;
 import com.example.auto_contact_exchange.OnAddedContactFound;
+import com.example.auto_contact_exchange.R;
+import com.example.auto_contact_exchange.SettingsActivity;
 
+import android.annotation.SuppressLint;
 import android.app.Service;
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.CommonDataKinds;
 import android.telephony.SmsManager;
@@ -27,12 +32,13 @@ public class ContactWatcherService extends Service implements OnContactChanged, 
 	@Override
 	public IBinder onBind(Intent intent) {
 		Log.d("SERVICE", "BOUND");
-		Toast.makeText(this, "CWS bound", Toast.LENGTH_SHORT).show();
 		return null;
 	}
 	
 	@Override
 	public void onCreate() {
+		PreferenceManager.setDefaultValues(getApplicationContext(), R.xml.preferences, false);
+		
 		oldContacts = getContacts();
 		observer = new ContactObserver(this);
 		getApplicationContext().getContentResolver().registerContentObserver(ContactsContract.Contacts.CONTENT_VCARD_URI, false, observer);
@@ -51,8 +57,14 @@ public class ContactWatcherService extends Service implements OnContactChanged, 
 		getApplicationContext().getContentResolver().unregisterContentObserver(observer);
 	}
 	
+	@SuppressLint("NewApi")
 	@Override
 	public void onAddedContactFound(Long contact) {
+		oldContacts = getContacts();
+		
+		if (contact == -1)
+			return;
+		
 		/****************************
 		 * Find Rest of Contact Info*
 		 ****************************/
@@ -69,8 +81,21 @@ public class ContactWatcherService extends Service implements OnContactChanged, 
 
 		String phoneNumber = getPhoneNumber(contact);
 		
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+		String prefMesg = sharedPref.getString("pref_mesg_str", "");
+		if (prefMesg.equals(""))
+			prefMesg = "Yo, what's up? Couldn't find the string from preferences. My name is {myname} though. Sorry dude.";
+		
+		String myName;
+		
+		Cursor c = getApplication().getContentResolver().query(ContactsContract.Profile.CONTENT_URI, null, null, null, null);
+		c.moveToFirst();
+		myName = c.getString(c.getColumnIndex("display_name"));
+		
+		prefMesg = prefMesg.replaceAll("\\Q{myname}\\E", myName);
+		
 		SmsManager manager = SmsManager.getDefault();
-		manager.sendTextMessage(phoneNumber, null, "What's Up?", null, null);
+		manager.sendTextMessage(phoneNumber, null, prefMesg, null, null);
 	}
 	
 	public ArrayList<Long> getContacts() {

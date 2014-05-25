@@ -16,16 +16,26 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
-		Log.d("SERVICE", "PRESTART");
+		//makes sure the service is running
 		Intent startServiceIntent = new Intent(this, ContactWatcherService.class);
 		startService(startServiceIntent);
 		
-		Button next = (Button) findViewById(R.id.next);
+		Button settingsBtn = (Button)findViewById(R.id.button1);
+		settingsBtn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent settingsIntent = new Intent(getApplicationContext(), SettingsActivity.class);
+				startActivity(settingsIntent);
+			}
+		});
+		
+		/*Button next = (Button) findViewById(R.id.next);
 		next.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				Intent nextScreen = new Intent(getApplicationContext(), AddContact.class);
                 startActivity(nextScreen);
 			}
-		});
+		});*/
 	}
 }

@@ -1,5 +1,7 @@
-package com.example.auto_contact_exchange.service;
+package com.example.auto_contact_exchange;
 
+
+import com.example.auto_contact_exchange.service.ContactWatcherService;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

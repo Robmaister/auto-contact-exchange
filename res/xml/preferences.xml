@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <ListPreference
+        android:key="pref_mesg_type"
+        android:title="@string/pref_mesg_type"
+        android:summary="@string/pref_mesg_type_summary"
+        android:dialogTitle="@string/pref_mesg_type_dialog"
+        android:entries="@array/pref_mesg_type_entries"
+        android:entryValues="@array/pref_mesg_type_values"
+        android:defaultValue="@string/pref_mesg_type_default"
+        />
+    <EditTextPreference
+        android:key="pref_mesg_str"
+        android:title="@string/pref_mesg_str"
+        android:summary="@string/pref_mesg_str_summary"
+        android:dialogTitle="@string/pref_mesg_str_dialog"
+        android:dialogMessage="@string/pref_mesg_str_format"
+        android:defaultValue="@string/pref_mesg_str_default"
+        />
+</PreferenceScreen>

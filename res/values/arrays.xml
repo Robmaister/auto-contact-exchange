@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="pref_mesg_type_entries">
+        <item>MMS</item>
+        <item>SMS</item>
+        <item>E-Mail</item>
+        <item>None</item>
+    </string-array>
+    <string-array name="pref_mesg_type_values">
+        <item>mms</item>
+        <item>sms</item>
+        <item>email</item>
+        <item>none</item>
+    </string-array>
+</resources>
