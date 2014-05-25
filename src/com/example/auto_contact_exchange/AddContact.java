@@ -69,7 +69,7 @@ public class AddContact extends Activity implements OnAddedContactFound {
 			for(int i=0; i< result.getColumnCount(); i++){
 				Log.i("CONTACTSTAG", result.getColumnName(i) + ": "
 						+ result.getString(i));
-			}         
+			}        
 		}
 
 		String phoneNumber = getPhoneNumber(contact);

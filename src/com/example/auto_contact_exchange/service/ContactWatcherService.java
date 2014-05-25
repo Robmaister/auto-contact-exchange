@@ -14,6 +14,8 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.IBinder;
 import android.provider.ContactsContract;
+import android.provider.ContactsContract.CommonDataKinds;
+import android.telephony.SmsManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -51,8 +53,24 @@ public class ContactWatcherService extends Service implements OnContactChanged, 
 	
 	@Override
 	public void onAddedContactFound(Long contact) {
-		// TODO Auto-generated method stub
+		/****************************
+		 * Find Rest of Contact Info*
+		 ****************************/
+		Cursor result = getContentResolver().query(ContactsContract.Contacts.CONTENT_URI, null, 
+				ContactsContract.Contacts._ID +" = ?", 
+				new String[]{""+contact}, null);      
+		if (result.moveToFirst()) {
+
+			for(int i=0; i< result.getColumnCount(); i++){
+				Log.i("CONTACTSTAG", result.getColumnName(i) + ": "
+						+ result.getString(i));
+			}        
+		}
+
+		String phoneNumber = getPhoneNumber(contact);
 		
+		SmsManager manager = SmsManager.getDefault();
+		manager.sendTextMessage(phoneNumber, null, "What's Up?", null, null);
 	}
 	
 	public ArrayList<Long> getContacts() {
@@ -66,5 +84,24 @@ public class ContactWatcherService extends Service implements OnContactChanged, 
 		}
 
 		return contacts;
+	}
+	
+	public String getPhoneNumber(long id) {
+		ArrayList<String> phones = new ArrayList<String>();
+		ContentResolver m = getContentResolver();
+		Cursor cursor = m.query(
+				CommonDataKinds.Phone.CONTENT_URI, 
+				null, 
+				CommonDataKinds.Phone.CONTACT_ID +" = ?", 
+				new String[]{""+id}, null);
+
+		while (cursor.moveToNext()) 
+		{
+			phones.add(cursor.getString(cursor.getColumnIndex(CommonDataKinds.Phone.NUMBER)));
+		} 
+
+		cursor.close();
+		
+		return phones.get(0);
 	}
 }
