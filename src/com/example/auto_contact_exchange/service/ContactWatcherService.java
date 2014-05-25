@@ -46,7 +46,6 @@ public class ContactWatcherService extends Service implements OnContactChanged, 
 
 	@Override
 	public void onContactChanged(Uri contact) {
-		Log.d("SERVICE", "CWS: " + contact.toString());
 		ContactListPair clp = new ContactListPair(oldContacts, getContacts());
 		FindAddedContactTask task = new FindAddedContactTask(this);
 		task.execute(clp);
