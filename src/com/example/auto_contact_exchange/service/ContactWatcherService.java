@@ -10,9 +10,13 @@ import com.example.auto_contact_exchange.R;
 import com.example.auto_contact_exchange.SettingsActivity;
 
 import android.annotation.SuppressLint;
+import android.app.IntentService;
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
@@ -27,17 +31,26 @@ import android.widget.Toast;
 public class ContactWatcherService extends Service implements OnContactChanged, OnAddedContactFound {
 
 	ContactObserver observer;
+	BroadcastReceiver screenOnReceiver;
 	ArrayList<Long> oldContacts;
 	
 	@Override
 	public IBinder onBind(Intent intent) {
-		Log.d("SERVICE", "BOUND");
 		return null;
 	}
 	
 	@Override
 	public void onCreate() {
 		PreferenceManager.setDefaultValues(getApplicationContext(), R.xml.preferences, false);
+		
+		screenOnReceiver = new BroadcastReceiver() {
+			@Override
+			public void onReceive(Context context, Intent intent) {
+				context.startService(new Intent(context, ContactWatcherService.class));
+			}
+		};
+		
+		registerReceiver(screenOnReceiver, new IntentFilter(Intent.ACTION_SCREEN_ON));
 		
 		oldContacts = getContacts();
 		observer = new ContactObserver(this);
@@ -53,6 +66,7 @@ public class ContactWatcherService extends Service implements OnContactChanged, 
 	
 	@Override
 	public void onDestroy() {
+		unregisterReceiver(screenOnReceiver);
 		getApplicationContext().getContentResolver().unregisterContentObserver(observer);
 	}
 	
